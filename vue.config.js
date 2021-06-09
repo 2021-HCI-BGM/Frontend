@@ -15,6 +15,7 @@ process.env.VUE_APP_UPDATE_TIME = dayjs()
   .format('YYYY-MM-DD')
 
 module.exports = {
+  lintOnSave: false,
   publicPath: '',
   chainWebpack(config) {
     config.resolve.alias

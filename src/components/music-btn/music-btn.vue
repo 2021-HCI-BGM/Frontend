@@ -1,6 +1,7 @@
 <template>
   <!--选项-->
   <div class="music-btn">
+    <router-link to="/music/video" tag="span">在线识别</router-link>
     <router-link to="/music/playlist" tag="span">正在播放</router-link>
     <router-link to="/music/toplist" tag="span">推荐</router-link>
     <router-link to="/music/search" tag="span">搜索</router-link>

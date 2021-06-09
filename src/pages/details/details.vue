@@ -28,7 +28,7 @@ export default {
   created() {
     // 获取歌单详情
     getPlaylistDetail(this.$route.params.id).then(playlist => {
-      document.title = `${playlist.name} - mmPlayer在线音乐播放器`
+      document.title = `${playlist.name} - BGM assistant`
       this.list = playlist.tracks
       this._hideLoad()
     })

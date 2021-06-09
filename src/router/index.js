@@ -10,8 +10,15 @@ const routes = [
   {
     path: '/music',
     component: () => import('pages/music'),
-    redirect: '/music/playlist',
+    redirect: '/music/video',
     children: [
+      {
+        path: '/music/video', // 摄像头
+        component: () => import('pages/video/video'),
+        meta: {
+          keepAlive: true
+        }
+      },
       {
         path: '/music/playlist', // 正在播放列表
         component: () => import('pages/playList/playList'),

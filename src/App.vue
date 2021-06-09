@@ -23,6 +23,7 @@ import { createTopList } from '@/utils/song'
 import MmHeader from 'components/mm-header/mm-header'
 import MmDialog from 'base/mm-dialog/mm-dialog'
 import { getVersion, setVersion } from '@/utils/storage'
+import video from 'pages/video/video';
 
 const VERSION_INFO = `<div class="mm-dialog-text text-left">
 版本号：${VERSION}（${process.env.VUE_APP_UPDATE_TIME}）<br/>

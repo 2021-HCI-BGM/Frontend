@@ -41,8 +41,8 @@ router.beforeEach((to, from, next) => {
     next()
   } else {
     document.title =
-      (to.meta.title && `${to.meta.title} - mmPlayer在线音乐播放器`) ||
-      'mmPlayer在线音乐播放器'
+      (to.meta.title && `${to.meta.title} - BGM assistant`) ||
+      'BGM assistant'
     next()
   }
 })
