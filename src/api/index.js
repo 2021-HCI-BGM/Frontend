@@ -69,6 +69,16 @@ export function getUserPlaylist(uid) {
   })
 }
 
+// 登录
+export function toLogin(phone, password) {
+  return axios.get('/login/cellphone', {
+    params: {
+      phone: phone,
+      password: password
+    }
+  })
+}
+
 // 获取歌曲详情
 export function getMusicDetail(ids) {
   return axios.get('/song/detail', {

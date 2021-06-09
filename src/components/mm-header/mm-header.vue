@@ -26,11 +26,21 @@
     >
       <div class="mm-dialog-text">
         <input
-          v-model.trim="uidValue"
+          v-model.trim="phone"
           class="mm-dialog-input"
           type="number"
           autofocus
-          placeholder="请输入您的网易云 UID"
+          placeholder="请输入您的手机号"
+          @keyup.enter="login"
+        />
+      </div>
+      <div class="mm-dialog-text">
+        <input
+          v-model.trim="password"
+          class="mm-dialog-input"
+          type="password"
+          autofocus
+          placeholder="请输入您的密码"
           @keyup.enter="login"
         />
       </div>
@@ -67,7 +77,7 @@
 </template>
 
 <script>
-import { getUserPlaylist } from 'api'
+import { getUserPlaylist, toLogin } from 'api'
 import { mapGetters, mapActions } from 'vuex'
 import MmDialog from 'base/mm-dialog/mm-dialog'
 import { toHttps } from '@/utils/util'
@@ -80,7 +90,9 @@ export default {
   data() {
     return {
       user: {}, // 用户数据
-      uidValue: '' // 记录用户 UID
+      uidValue: '', // 记录用户 UID
+      phone: '', // 登录电话
+      password: '' // 登录密码
     }
   },
   computed: {
@@ -116,13 +128,27 @@ export default {
     },
     // 登录
     login() {
-      if (this.uidValue === '') {
-        this.$mmToast('UID 不能为空')
+      if (this.phone === '') {
+        this.$mmToast('手机号 不能为空')
+        this.openDialog(0)
+        return
+      }
+      if (this.password === '') {
+        this.$mmToast('密码 不能为空')
         this.openDialog(0)
         return
       }
       this.openDialog(3)
-      this._getUserPlaylist(this.uidValue)
+      this._login(this.phone, this.password)
+      // this._getUserPlaylist(this.uidValue)
+    },
+    // 登录
+    _login(phone, password) {
+      toLogin(phone, password).then(data => {
+        this._getUserPlaylist(data.account.id)
+      }).catch(e => {
+        this.$mmToast('手机号不存在 或 密码错误')
+      })
     },
     // 获取用户数据
     _getUserPlaylist(uid) {
@@ -139,7 +165,7 @@ export default {
         setTimeout(() => {
           this.$mmToast(`${this.user.nickname} 欢迎使用 mmPlayer`)
         }, 200)
-      })
+      }).catch(e => {})
     },
     ...mapActions(['setUid'])
   }
