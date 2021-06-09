@@ -8,7 +8,6 @@
       <template v-if="currentMusic.id">
         <dd>歌曲名：{{ currentMusic.name }}</dd>
         <dd>歌手名：{{ currentMusic.singer }}</dd>
-        <dd>专辑名：{{ currentMusic.album }}</dd>
       </template>
       <template v-else>
         <dd>BGM assistant</dd>

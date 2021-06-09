@@ -2,25 +2,28 @@
   <v-container id="video-view" fluid tag="section">
     <v-row justify="center">
       <v-col cols="auto">
-        <v-card elevation="2" outlined>
-          <v-card-text>
-            <div style="height:500px;width:750px; position: relative;background:#000;">
+        <!-- <v-card elevation="2" outlined>
+          <v-card-text> -->
+            <div style="height:50px;width:80px; position: relative;background:#000;">
               <video ref="myVideo" style="width:100%;height:100%">
               </video>
               <v-barrage :arr="arr" :isPause="isPause" :percent="100">
               </v-barrage>
             </div>
-          </v-card-text>
+          <!-- </v-card-text>
           <v-card-actions class="justify-center">
           </v-card-actions>
-        </v-card>
+        </v-card> -->
       </v-col>
       <v-col>
-        <v-btn color="primary" elevation="2" @click="clickVideoBtn()">
-              {{btnText}}
-            </v-btn>
-      </v-col>
-     
+        <div>
+          <button id="btn" @click="clickVideoBtn()">
+            {{btnText}}
+          </button>
+          <i class="iconfont my-icon-heart"></i>
+        </div>
+
+        </v-col>
       <v-dialog v-model="dialog" width="300">
         <v-card>
           <v-card-title class="text-h5">
@@ -180,6 +183,15 @@
 <style lang="less">
 #video-view{
   display: flex;
+  float: left;
   justify-content: space-around;
+}
+
+#btn{
+  height: 40px;
+  width: 100px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: white;
 }
 </style>

@@ -72,13 +72,13 @@
       </div>
 
       <!-- 播放模式 -->
-      <mm-icon
+      <!-- <mm-icon
         class="icon-color pointer mode"
         :type="getModeIconType()"
         :title="getModeIconTitle()"
         :size="30"
         @click="modeChange"
-      />
+      /> -->
 
       <!-- 评论 -->
       <mm-icon
