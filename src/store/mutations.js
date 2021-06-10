@@ -29,6 +29,10 @@ const mutations = {
   [types.SET_HISTORYLIST](state, historyList) {
     state.historyList = historyList
   },
+  // 修改喜欢歌曲列表
+  [types.SET_LIKELIST](state, likeList) {
+    state.likeList = likeList
+  },
   // 修改网易云用户UID
   [types.SET_UID](state, uid) {
     state.uid = uid

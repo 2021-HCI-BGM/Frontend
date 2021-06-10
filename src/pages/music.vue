@@ -81,12 +81,17 @@
       /> -->
 
       <!-- 评论 -->
-      <mm-icon
+      <!-- <mm-icon
         class="icon-color pointer comment"
         type="comment"
         :size="30"
         @click="openComment"
-      />
+      /> -->
+
+       <mm-icon
+        class="icon-color pointer comment"/>
+
+      <button class="iconfont my-icon-heart" style="fontSize:30px" @click="addLike"></button>
 
       <!-- 音量控制 -->
       <div class="music-bar-volume" title="音量加减 [Ctrl + Up / Down]">
@@ -162,7 +167,8 @@ export default {
       'orderList',
       'currentIndex',
       'currentMusic',
-      'historyList'
+      'historyList',
+      'likeList'
     ])
   },
   watch: {
@@ -355,6 +361,18 @@ export default {
       }
       this.$router.push(`/music/comment/${this.currentMusic.id}`)
     },
+    // 添加音乐到喜欢
+    addLike(){
+      if (!this.currentMusic.id) {
+        this.$mmToast('还没有播放歌曲哦！')
+        return false
+      }else{
+        console.log("添加！")
+        console.log(this.likeList)
+        this.setLikes(this.currentMusic)
+        this.$mmToast('添加喜欢歌曲 成功！请到 我的歌单 中查看！')
+      }
+    },
     // 修改音量大小
     volumeChange(percent) {
       percent === 0 ? (this.isMute = true) : (this.isMute = false)
@@ -409,7 +427,7 @@ export default {
       setPlaylist: 'SET_PLAYLIST',
       setCurrentIndex: 'SET_CURRENTINDEX'
     }),
-    ...mapActions(['setHistory', 'setPlayMode'])
+    ...mapActions(['setHistory', 'setLikes', 'setPlayMode'])
   }
 }
 </script>

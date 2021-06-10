@@ -54,6 +54,13 @@ const routes = [
         }
       },
       {
+        path: '/music/likelist', // 喜欢歌曲列表
+        component: () => import('pages/likeList/likeList'),
+        meta: {
+          title: '我听过的'
+        }
+      },
+      {
         path: '/music/search', // 搜索
         component: () => import('pages/search/search'),
         meta: {

@@ -2,6 +2,9 @@ import {
   clearHistoryList,
   setHistoryList,
   removeHistoryList,
+  clearLikeList,
+  setLikeList,
+  removeLikeList,
   setMode,
   setUserId
 } from '@/utils/storage'
@@ -81,6 +84,22 @@ export const removeHistory = function({ commit }, music) {
 export const clearHistory = function({ commit }) {
   commit(types.SET_HISTORYLIST, clearHistoryList())
 }
+
+
+// 设置喜欢列表
+export const setLikes = function({ commit }, music) {
+  commit(types.SET_LIKELIST, setLikeList(music))
+}
+// 删除喜欢歌曲
+export const removeLikes = function({ commit }, music) {
+  commit(types.SET_LIKELIST, removeLikeList(music))
+}
+// 清空喜欢列表
+export const clearLikes = function({ commit }) {
+  commit(types.SET_LIKELIST, clearLikeList())
+}
+
+
 // 设置播放模式
 export const setPlayMode = function({ commit }, mode) {
   commit(types.SET_PLAYMODE, setMode(mode))

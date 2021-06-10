@@ -4,13 +4,12 @@
       <v-col cols="auto">
         <!-- <v-card elevation="2" outlined>
           <v-card-text> -->
-            <div style="height:50px;width:80px; position: relative;background:#000;">
-              <video ref="myVideo" style="width:100%;height:100%">
-              </video>
-              <v-barrage :arr="arr" :isPause="isPause" :percent="100">
-              </v-barrage>
-            </div>
-          <!-- </v-card-text>
+        <div style="height:500px;width:750px; position: relative;background:#000;margin:0">
+          <video ref="myVideo" style="width:100%">
+          </video>
+          <v-barrage :arr="arr" :is-pause="isPause" :percent="100" />
+        </div>
+        <!-- </v-card-text>
           <v-card-actions class="justify-center">
           </v-card-actions>
         </v-card> -->
@@ -18,23 +17,21 @@
       <v-col>
         <div>
           <button id="btn" @click="clickVideoBtn()">
-            {{btnText}}
+            {{ btnText }}
           </button>
-          <i class="iconfont my-icon-heart"></i>
         </div>
-
-        </v-col>
+      </v-col>
       <v-dialog v-model="dialog" width="300">
         <v-card>
           <v-card-title class="text-h5">
             请为本次服务评分
           </v-card-title>
           <v-card-text>
-            <v-rating v-model="rating" icon-label="custom icon label text {0} of {1}"></v-rating>
+            <v-rating v-model="rating" icon-label="custom icon label text {0} of {1}" />
             感谢您的反馈！
           </v-card-text>
           <v-card-actions>
-            <v-spacer></v-spacer>
+            <v-spacer />
             <v-btn color="green darken-1" text @click="dialog = false">
               放弃
             </v-btn>
@@ -50,36 +47,38 @@
 
 <script>
   import VBarrage from '@/components/video/VBarrage'
-
+  import { mapGetters } from 'vuex'
 
   export default {
     name: 'Video',
     components: {
-      VBarrage,
+      VBarrage
+    },
+    computed: {
+      ...mapGetters(['uid'])
     },
 
     data: () => ({
       isPlay: false,
-      btnText: "开始识别",
-      arr: [], //弹幕数组
+      btnText: '开始识别',
+      arr: [], // 弹幕数组
       sendContent: null,
       direction: 'default',
 
-
-      dialog: false, //对话框
+      dialog: false, // 对话框
       iconClick: false,
 
-      info: null,
+      info: null
     }),
     mounted() {
-      this.initVideo();
-      this.initTestData();
+      this.initVideo()
+      this.initTestData()
 
-      this.$socket.emit('connect'); //在这里触发connect事件
+      this.$socket.emit('connect') // 在这里触发connect事件
     },
     sockets: {
       // 通信的name
-      //这里是监听connect事件
+      // 这里是监听connect事件
       connect: function () {
         this.id = this.$socket.id
         // alert('建立连接')
@@ -93,59 +92,59 @@
       reconnect: function () {
         console.log('重新连接')
         this.$socket.emit('conect')
-
       },
       server_response: function (data) {
         console.log('接收数据', data)
       },
       get_num: function (data) {
-        console.log('得到数字', data);
+        console.log('得到数字', data)
       }
     },
 
     methods: {
-      //初始化video
+      // 初始化video
       initVideo() {
-        let myVideo = this.$refs.myVideo;
+        console.log("inti videl")
+        let myVideo = this.$refs.myVideo
         navigator.mediaDevices.getUserMedia({
           video: true
         }).then((stream) => {
-          myVideo.srcObject = stream;
-          myVideo.play();
-          myVideo.pause();
+          myVideo.srcObject = stream
+          myVideo.play()
+          myVideo.pause()
         }).catch((err) => {
-          console.log(err);
-        });
-
+          console.log(err)
+        })
       },
 
-
       clickVideoBtn() {
-        this.initTestData();
-        let myVideo = this.$refs.myVideo;
-        if (this.isPlay) {
-          myVideo.pause();
-          this.isPlay = false;
-          this.btnText = "开始识别";
-          this.dialog = true;
+        if (!this.uid) {
+          this.$mmToast('未登录！请先登录！')
         } else {
-          myVideo.play();
-          this.isPlay = true;
-          this.btnText = "停止识别";
+          this.initTestData()
+          let myVideo = this.$refs.myVideo
+          if (this.isPlay) {
+            myVideo.pause()
+            this.isPlay = false
+            this.btnText = '开始识别'
+            this.dialog = true
+          } else {
+            myVideo.play()
+            this.isPlay = true
+            this.btnText = '停止识别'
+          }
+
+          this.$socket.emit('my_event', 99987)
         }
-
-        this.$socket.emit('my_event', 99987);
-
 
       },
       // 初始化模拟弹幕数据
       initTestData() {
-        this.arr = [];
+        this.arr = []
         this.arr.push({
           direction: 'default',
           content: '检测到trigger,识别开始'
         })
-
       },
       // 发送弹幕
       sendBarrage() {
@@ -159,7 +158,7 @@
               fontSize: '25px'
             },
             isJs: this.isJs
-          });
+          })
         } else {
           this.arr.push({
             content: this.sendContent,
@@ -169,29 +168,27 @@
               color: 'red'
             },
             isJs: this.isJs
-          });
+          })
         }
-        this.sendContent = null;
-      },
+        this.sendContent = null
+      }
 
-
-
-    },
+    }
   }
 </script>
 
 <style lang="less">
-#video-view{
-  display: flex;
-  float: left;
-  justify-content: space-around;
-}
+  #video-view {
+    // display: flex;
+    // float: left;
+    // justify-content: space-around;
+  }
 
-#btn{
-  height: 40px;
-  width: 100px;
-  border-style: solid;
-  border-width: 1px;
-  border-color: white;
-}
+  #btn {
+    height: 40px;
+    width: 100px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: white;
+  }
 </style>

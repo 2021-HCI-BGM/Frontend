@@ -13,6 +13,7 @@ import VueLazyload from 'vue-lazyload'
 import { VERSION } from './config'
 
 import '@/styles/index.less'
+import vuetify from './plugins/vuetify'
 
 // 优化移动端300ms点击延迟
 fastclick.attach(document.body)
@@ -61,5 +62,6 @@ new Vue({
   el: '#mmPlayer',
   store,
   router,
+  vuetify,
   render: h => h(App)
 })

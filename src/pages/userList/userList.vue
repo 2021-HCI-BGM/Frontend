@@ -4,7 +4,7 @@
     <mm-loading v-model="mmLoadShow" />
     <template v-if="list.length > 0">
       <div
-        v-for="item in formatList"
+        v-for="item in list"
         :key="item.id"
         class="list-item"
         :title="item.name"
@@ -60,7 +60,7 @@ export default {
       }
     }
   },
-  created() {
+  mounted() {
     if (!this.uid) {
       this.mmLoadShow = false
     } else {
@@ -84,6 +84,9 @@ export default {
         }
         this.list = res.playlist
         this._hideLoad()
+
+        console.log("this is list")
+        console.log(this.list)
       })
     }
   }

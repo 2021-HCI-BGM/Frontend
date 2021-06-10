@@ -17,6 +17,7 @@ process.env.VUE_APP_UPDATE_TIME = dayjs()
 module.exports = {
   lintOnSave: false,
   publicPath: '',
+
   chainWebpack(config) {
     config.resolve.alias
       .set('api', resolve('src/api'))
@@ -32,6 +33,7 @@ module.exports = {
       return args
     })
   },
+
   pluginOptions: {
     'style-resources-loader': {
       preProcessor: 'less',
@@ -40,5 +42,9 @@ module.exports = {
         resolve('src/styles/mixin.less')
       ]
     }
-  }
+  },
+
+  transpileDependencies: [
+    'vuetify'
+  ]
 }

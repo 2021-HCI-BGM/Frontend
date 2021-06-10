@@ -67,6 +67,53 @@ export function clearHistoryList() {
   return []
 }
 
+
+/**
+ * 喜欢列表
+ * @type    LIKELIST_KEY：key值
+ *          LikeListMAX：最大长度
+ */
+ const LIKELIST_KEY = '__mmPlayer_likeList__'
+ const LikeListMAX = 200
+ // 获取喜欢列表
+ export function getLikeList() {
+   return storage.get(LIKELIST_KEY)
+ }
+ 
+ // 更新喜欢列表
+ export function setLikeList(music) {
+   let list = storage.get(LIKELIST_KEY)
+   const index = list.findIndex(item => {
+     return item.id === music.id
+   })
+   if (index === 0) {
+     return list
+   }
+   if (index > 0) {
+     list.splice(index, 1)
+   }
+   list.unshift(music)
+   if (LikeListMAX && list.length > LikeListMAX) {
+     list.pop()
+   }
+   storage.set(LIKELIST_KEY, JSON.stringify(list))
+   return list
+ }
+ 
+ // 删除一条喜欢歌曲
+ export function removeLikeList(music) {
+   storage.set(LIKELIST_KEY, JSON.stringify(music))
+   return music
+ }
+ 
+ // 清空喜欢歌曲
+ export function clearLikeList() {
+   storage.clear(LIKELIST_KEY)
+   return []
+ }
+
+
+
 /**
  * 播放模式
  * @type    MODE_KEY：key值

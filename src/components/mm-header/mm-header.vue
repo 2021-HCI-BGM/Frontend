@@ -44,7 +44,7 @@
           @keyup.enter="login"
         />
       </div>
-      <div slot="btn" @click="openDialog(1)">帮助</div>
+      <!-- <div slot="btn" @click="openDialog(1)">帮助</div> -->
     </mm-dialog>
     <!--帮助-->
     <mm-dialog
