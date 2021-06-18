@@ -11,9 +11,20 @@ import mmToast from 'base/mm-toast'
 import Icon from 'base/mm-icon/mm-icon'
 import VueLazyload from 'vue-lazyload'
 import { VERSION } from './config'
-
 import '@/styles/index.less'
 import vuetify from './plugins/vuetify'
+import VueSocketIO from 'vue-socket.io'
+import SocketIO from 'socket.io-client'
+
+Vue.use(new VueSocketIO({
+  debug: true,
+  connection: SocketIO('http://localhost:5000/test'),
+  vuex: {
+      store,
+      actionPrefix: 'SOCKET_',
+      mutationPrefix: 'SOCKET_'
+  },
+}))
 
 // 优化移动端300ms点击延迟
 fastclick.attach(document.body)

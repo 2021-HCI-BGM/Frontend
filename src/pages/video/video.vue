@@ -76,13 +76,12 @@
 
       this.$socket.emit('connect') // 在这里触发connect事件
     },
-    sockets: {
+     sockets: {
       // 通信的name
-      // 这里是监听connect事件
+      //这里是监听connect事件
       connect: function () {
         this.id = this.$socket.id
         // alert('建立连接')
-        this.$socket.emit('my_event', 9999)
       },
 
       disconnect: function () {
@@ -92,19 +91,20 @@
       reconnect: function () {
         console.log('重新连接')
         this.$socket.emit('conect')
+
       },
-      server_response: function (data) {
+      my_response: function (data) {
         console.log('接收数据', data)
       },
       get_num: function (data) {
-        console.log('得到数字', data)
+        console.log('得到数字', data);
       }
     },
+
 
     methods: {
       // 初始化video
       initVideo() {
-        console.log("inti videl")
         let myVideo = this.$refs.myVideo
         navigator.mediaDevices.getUserMedia({
           video: true
