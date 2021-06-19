@@ -87,6 +87,12 @@ export function getMusicDetail(ids) {
   })
 }
 
+// 获取云端音乐列表
+export function getCloudList(){
+  return axios.get('/user/cloud')
+}
+
+
 // 获取音乐是否可以用
 export function getCheckMusic(id) {
   return axios.get('/check/music', {

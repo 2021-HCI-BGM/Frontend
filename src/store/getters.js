@@ -16,6 +16,8 @@ export const currentMusic = state => {
 }
 // 播放历史列表
 export const historyList = state => state.historyList
+// 云端歌曲列表
+export const cloudList = state => state.cloudList
 // 喜欢歌曲列表
 export const likeList = state => state.likeList
 // 网易云用户UID

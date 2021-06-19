@@ -1,4 +1,5 @@
 import { toHttps } from './util'
+import { cloudList } from '@/assets/musicData/cloudMusic'
 
 function filterSinger(singers) {
   let arr = []
@@ -32,6 +33,18 @@ export function createPlayList(music) {
   })
 }
 
+export function createCloudMusic(music) {
+  return new Song({
+    id: music.songId,
+    name: music.simpleSong.name,
+    singer: music.artist,
+    album: music.album,
+    image: music.simpleSong.al.picUrl,
+    duration: music.simpleSong.dt / 1000,
+    url: music.url,
+  })
+}
+
 export function createTopList(music) {
   return new Song({
     id: music.id,
@@ -56,7 +69,16 @@ const formatSongs = function formatPlayList(list) {
   return Songs
 }
 
-export const formatTopSongs = function formatTopList(list) {
+// 云盘歌曲数据格式化
+export function getCloudSongs() {
+  let Songs = []
+  cloudList.data.forEach(item => {
+    Songs.push(createCloudMusic(item))
+  })
+  return Songs
+}
+
+export function formatTopSongs(list) {
   let Songs = []
   list.forEach(item => {
     const musicData = item

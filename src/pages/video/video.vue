@@ -2,17 +2,11 @@
   <v-container id="video-view" fluid tag="section">
     <v-row justify="center">
       <v-col cols="auto">
-        <!-- <v-card elevation="2" outlined>
-          <v-card-text> -->
         <div style="height:500px;width:750px; position: relative;background:#000;margin:0">
           <video ref="myVideo" style="width:100%">
           </video>
-          <v-barrage :arr="arr" :is-pause="isPause" :percent="100" />
+          <v-barrage :arr="barrageArray" :is-pause="isPause" :percent="100" />
         </div>
-        <!-- </v-card-text>
-          <v-card-actions class="justify-center">
-          </v-card-actions>
-        </v-card> -->
       </v-col>
       <v-col>
         <div>
@@ -21,7 +15,7 @@
           </button>
         </div>
       </v-col>
-      <v-dialog v-model="dialog" width="300">
+      <v-dialog v-model="dialogShow" width="300">
         <v-card>
           <v-card-title class="text-h5">
             请为本次服务评分
@@ -32,10 +26,10 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer />
-            <v-btn color="green darken-1" text @click="dialog = false">
+            <v-btn color="green darken-1" text @click="dialogShow = false">
               放弃
             </v-btn>
-            <v-btn color="green darken-1" text @click="dialog = false">
+            <v-btn color="green darken-1" text @click="dialogShow = false">
               确定
             </v-btn>
           </v-card-actions>
@@ -47,7 +41,8 @@
 
 <script>
   import VBarrage from '@/components/video/VBarrage'
-  import { mapGetters } from 'vuex'
+  import { mapGetters, mapActions, mapMutations } from 'vuex'
+  import { getCloudSongs } from '@/utils/song'
 
   export default {
     name: 'Video',
@@ -55,33 +50,32 @@
       VBarrage
     },
     computed: {
-      ...mapGetters(['uid'])
+      ...mapGetters(['uid', 'playing', 'currentMusic', 'historyList'])
     },
 
     data: () => ({
       isPlay: false,
       btnText: '开始识别',
-      arr: [], // 弹幕数组
-      sendContent: null,
-      direction: 'default',
+      barrageArray: [], // 弹幕数组
+      barrageStart: '检测到trigger,识别开始',  //开始时的弹幕
+      barrageEnd: '检测到trigger，识别结束',   //结束的弹幕
 
-      dialog: false, // 对话框
-      iconClick: false,
+      dialogShow: false, // 对话框
 
-      info: null
+      cloudList: [],
     }),
     mounted() {
-      this.initVideo()
-      this.initTestData()
+      this.cloudList=getCloudSongs();  //初始化云端歌曲列表
 
+      this.initVideo()
       this.$socket.emit('connect') // 在这里触发connect事件
     },
-     sockets: {
+    sockets: {
       // 通信的name
       //这里是监听connect事件
       connect: function () {
         this.id = this.$socket.id
-        // alert('建立连接')
+        alert('建立连接')
       },
 
       disconnect: function () {
@@ -90,15 +84,29 @@
 
       reconnect: function () {
         console.log('重新连接')
-        this.$socket.emit('conect')
+        this.$socket.emit('connect')
+      },
 
+      trigger: function(data){  //监听后端trigger事件
+        if(data==true){
+          this.sendBarrage(this.barrageStart);
+        }else{
+          this.sendBarrage(this.barrageEnd);
+        }
       },
-      my_response: function (data) {
-        console.log('接收数据', data)
-      },
-      get_num: function (data) {
-        console.log('得到数字', data);
+
+      url: function(id){   //监听后端url事件，播放歌曲
+        let music=this.cloudList.find((item,index)=>{
+          return item.id==id
+        })
+
+        console.log("song")
+        console.log(music)
+        this.selectAddPlay(music)
+
+        
       }
+
     },
 
 
@@ -121,57 +129,33 @@
         if (!this.uid) {
           this.$mmToast('未登录！请先登录！')
         } else {
-          this.initTestData()
+          this.$socket.emit('begin', this.isPlay)
+
           let myVideo = this.$refs.myVideo
           if (this.isPlay) {
-            myVideo.pause()
+            // myVideo.pause()
             this.isPlay = false
             this.btnText = '开始识别'
-            this.dialog = true
+            this.dialogShow = true
           } else {
-            myVideo.play()
+            // myVideo.play()
             this.isPlay = true
             this.btnText = '停止识别'
           }
-
-          this.$socket.emit('my_event', 99987)
         }
-
       },
-      // 初始化模拟弹幕数据
-      initTestData() {
-        this.arr = []
-        this.arr.push({
+      // 发送弹幕,barrageText是this.barrageStart或者this.barrageEnd
+      sendBarrage(barrageText) {
+        this.barrageArray = []
+        this.barrageArray.push({
           direction: 'default',
-          content: '检测到trigger,识别开始'
+          content: barrageText
         })
       },
-      // 发送弹幕
-      sendBarrage() {
-        if (this.arr.length > 1 && this.sendContent != '' && this.sendContent != null) {
-          this.arr.unshift({
-            content: this.sendContent,
-            direction: this.direction,
-            isSelf: true,
-            style: {
-              color: 'red',
-              fontSize: '25px'
-            },
-            isJs: this.isJs
-          })
-        } else {
-          this.arr.push({
-            content: this.sendContent,
-            direction: this.direction,
-            isSelf: true,
-            style: {
-              color: 'red'
-            },
-            isJs: this.isJs
-          })
-        }
-        this.sendContent = null
-      }
+      ...mapMutations({
+        setPlaying: 'SET_PLAYING'
+      }),
+      ...mapActions(['selectPlay','selectAddPlay','setCloud'])
 
     }
   }
