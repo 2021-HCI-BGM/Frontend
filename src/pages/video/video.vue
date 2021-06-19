@@ -85,6 +85,7 @@
           this.sendBarrage(this.barrageStart);
         } else {
           this.sendBarrage(this.barrageEnd);
+          this.setPlaying(false)
         }
       },
 
@@ -96,9 +97,13 @@
         console.log("song")
         console.log(music)
         this.selectAddPlay(music)
-
-
+      },
+      done: function(data)
+      {
+        console.log("backend done:",data)
+        this.uploadPicture()
       }
+
 
     },
 
@@ -141,7 +146,8 @@
             this.btnText = '停止识别'
 
             //开始识别,每隔1秒上传图像给后端
-            setInterval(()=>{this.uploadPicture()},1000)
+            // setInterval(()=>{this.uploadPicture()},3000)\
+            this.uploadPicture()//第一次就先点击的时候发送
           }
         }
       },
@@ -164,7 +170,7 @@
         var imgData = canvas.toDataURL();
 
         this.$socket.emit("picture",imgData)
-        console.log(imgData)
+        // console.log(imgData)
       },
 
       ...mapMutations({
