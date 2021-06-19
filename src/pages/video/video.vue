@@ -140,6 +140,7 @@
             this.isPlay = false
             this.btnText = '开始识别'
             this.visible = true
+            this.setPlaying(false)
           } else {
             myVideo.play()
             this.isPlay = true
