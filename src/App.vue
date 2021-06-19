@@ -1,18 +1,15 @@
 <template>
-  <div id="app">
-    <!--主体-->
-    <mm-header />
-    <router-view class="router-view" />
-    <!--更新说明-->
-    <mm-dialog
-      ref="versionDialog"
-      type="alert"
-      head-text="更新提示"
-      :body-text="versionInfo"
-    />
-    <!--播放器-->
-    <audio ref="mmPlayer"></audio>
-  </div>
+  <a-locale-provider :locale="zh_CN">
+    <div id="app">
+      <!--主体-->
+      <mm-header />
+      <router-view class="router-view" />
+      <!--更新说明-->
+      <mm-dialog ref="versionDialog" type="alert" head-text="更新提示" :body-text="versionInfo" />
+      <!--播放器-->
+      <audio ref="mmPlayer"></audio>
+    </div>
+  </a-locale-provider>
 </template>
 
 <script>
@@ -23,7 +20,12 @@ import { createTopList } from '@/utils/song'
 import MmHeader from 'components/mm-header/mm-header'
 import MmDialog from 'base/mm-dialog/mm-dialog'
 import { getVersion, setVersion } from '@/utils/storage'
-import video from 'pages/video/video';
+import zh_CN from "ant-design-vue/lib/locale-provider/zh_CN";
+import moment from "moment";
+import "moment/locale/zh-cn";
+
+// antd 使用中文
+moment.locale("zh-cn");
 
 const VERSION_INFO = `<div class="mm-dialog-text text-left">
 版本号：${VERSION}（${process.env.VUE_APP_UPDATE_TIME}）<br/>
@@ -38,6 +40,11 @@ export default {
   components: {
     MmHeader,
     MmDialog
+  },
+  data() {
+    return {
+      zh_CN,
+    };
   },
   created() {
     // 设置版本更新信息

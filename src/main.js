@@ -15,6 +15,9 @@ import '@/styles/index.less'
 import vuetify from './plugins/vuetify'
 import VueSocketIO from 'vue-socket.io'
 import SocketIO from 'socket.io-client'
+import Antd from 'ant-design-vue'
+import 'ant-design-vue/dist/antd.css'
+
 
 Vue.use(new VueSocketIO({
   debug: true,
@@ -34,6 +37,9 @@ Vue.use(mmToast)
 
 // icon 组件
 Vue.component(Icon.name, Icon)
+
+// antd
+Vue.use(Antd)
 
 // 懒加载
 Vue.use(VueLazyload, {

@@ -2,7 +2,7 @@
   <!--头部-->
   <header class="mm-header">
     <h1 class="header">
-      <a target="_blank">
+      <a target="_blank" style="color:white">
         BGM assistant
       </a>
     </h1>

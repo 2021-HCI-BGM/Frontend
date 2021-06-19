@@ -15,34 +15,26 @@
           </button>
         </div>
       </v-col>
-      <v-dialog v-model="dialogShow" width="300">
-        <v-card>
-          <v-card-title class="text-h5">
-            请为本次服务评分
-          </v-card-title>
-          <v-card-text>
-            <v-rating v-model="rating" icon-label="custom icon label text {0} of {1}" />
-            感谢您的反馈！
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer />
-            <v-btn color="green darken-1" text @click="dialogShow = false">
-              放弃
-            </v-btn>
-            <v-btn color="green darken-1" text @click="dialogShow = false">
-              确定
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
+      <a-modal v-model="visible" title="请为本次服务评分" @ok="handleOk">
+        <p>
+          <a-rate v-model="value" :tooltips="desc" />
+        </p>
+        <p>感谢您的反馈!</p>
+      </a-modal>
     </v-row>
   </v-container>
 </template>
 
 <script>
   import VBarrage from '@/components/video/VBarrage'
-  import { mapGetters, mapActions, mapMutations } from 'vuex'
-  import { getCloudSongs } from '@/utils/song'
+  import {
+    mapGetters,
+    mapActions,
+    mapMutations
+  } from 'vuex'
+  import {
+    getCloudSongs
+  } from '@/utils/song'
 
   export default {
     name: 'Video',
@@ -57,15 +49,15 @@
       isPlay: false,
       btnText: '开始识别',
       barrageArray: [], // 弹幕数组
-      barrageStart: '检测到trigger,识别开始',  //开始时的弹幕
-      barrageEnd: '检测到trigger，识别结束',   //结束的弹幕
-
-      dialogShow: false, // 对话框
-
+      barrageStart: '检测到trigger,识别开始', //开始时的弹幕
+      barrageEnd: '检测到trigger，识别结束', //结束的弹幕
       cloudList: [],
+      visible: false,   //对话框是否可见
+      value: 3,   //评分
+      desc: ['很差', '差', '一般', '不错', '很棒'],  //描述
     }),
     mounted() {
-      this.cloudList=getCloudSongs();  //初始化云端歌曲列表
+      this.cloudList = getCloudSongs(); //初始化云端歌曲列表
 
       this.initVideo()
       this.$socket.emit('connect') // 在这里触发connect事件
@@ -87,30 +79,35 @@
         this.$socket.emit('connect')
       },
 
-      trigger: function(data){  //监听后端trigger事件
-        if(data==true){
+      trigger: function (data) { //监听后端trigger事件
+        if (data == true) {
           this.sendBarrage(this.barrageStart);
-        }else{
+        } else {
           this.sendBarrage(this.barrageEnd);
         }
       },
 
-      url: function(id){   //监听后端url事件，播放歌曲
-        let music=this.cloudList.find((item,index)=>{
-          return item.id==id
+      url: function (id) { //监听后端url事件，播放歌曲
+        let music = this.cloudList.find((item, index) => {
+          return item.id == id
         })
 
         console.log("song")
         console.log(music)
         this.selectAddPlay(music)
 
-        
+
       }
 
     },
 
 
     methods: {
+      handleOk(e) {
+        console.log(e)
+        this.visible = false
+      },
+
       // 初始化video
       initVideo() {
         let myVideo = this.$refs.myVideo
@@ -133,12 +130,12 @@
 
           let myVideo = this.$refs.myVideo
           if (this.isPlay) {
-            // myVideo.pause()
+            myVideo.pause()
             this.isPlay = false
             this.btnText = '开始识别'
-            this.dialogShow = true
+            this.visible = true
           } else {
-            // myVideo.play()
+            myVideo.play()
             this.isPlay = true
             this.btnText = '停止识别'
           }
@@ -155,7 +152,7 @@
       ...mapMutations({
         setPlaying: 'SET_PLAYING'
       }),
-      ...mapActions(['selectPlay','selectAddPlay','setCloud'])
+      ...mapActions(['selectPlay', 'selectAddPlay', 'setCloud'])
 
     }
   }

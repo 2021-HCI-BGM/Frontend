@@ -6,7 +6,7 @@
         <span class="list-name">歌曲</span>
         <span class="list-artist">歌手</span>
         <span v-if="listType === 1" class="list-time">时长</span>
-        <span v-else class="list-album">专辑</span>
+        <span class="list-album">操作</span>
       </div>
       <div ref="listContent" class="list-content" @scroll="listScroll($event)">
         <div
@@ -38,10 +38,43 @@
               @click.stop="deleteItem(index)"
             />
           </span>
-          <span v-else class="list-album">{{ item.album }}</span>
+          <span  class="list-album">
+            <a-button @click="visible=true;musicItem=item"><a-icon type="check" />评分</a-button>
+          </span>
         </div>
         <slot name="listBtn"></slot>
       </div>
+      <a-modal v-model="visible" title="请为本首歌评分" @ok="handleOk">
+        <p>听了此歌您的心情：
+           <a-select default-value="happiness" style="width: 120px" @change="handleChange">
+            <a-select-option value="happiness">
+              开心
+            </a-select-option>
+            <a-select-option value="neutral">
+              平静
+            </a-select-option>
+            <a-select-option value="sadness">
+              伤心
+            </a-select-option>
+            <a-select-option value="surprise">
+              惊讶
+            </a-select-option>
+            <a-select-option value="anger">
+              愤怒
+            </a-select-option>
+            <a-select-option value="disgust">
+              厌恶
+            </a-select-option>
+            <a-select-option value="fear">
+              恐惧
+            </a-select-option>
+          </a-select>
+        </p>
+        <p>
+          <a-rate v-model="score" :tooltips="desc" />
+        </p>
+        <p>感谢您的反馈!</p>
+      </a-modal>
     </template>
     <mm-no-result v-else title="弄啥呢，怎么啥也没有！！！" />
   </div>
@@ -78,7 +111,11 @@ export default {
   },
   data() {
     return {
-      lockUp: true // 是否锁定滚动加载事件,默认锁定
+      lockUp: true, // 是否锁定滚动加载事件,默认锁定
+      musicItem: null,   //当前歌曲
+      visible: false,  //对话框是否可见
+      score: 1,    //歌曲评分
+      feeling: "happiness",   //歌曲心情
     }
   },
   computed: {
@@ -104,6 +141,22 @@ export default {
       (this.$refs.listContent.scrollTop = this.scrollTop)
   },
   methods: {
+    //对话框确认事件：评价一首歌
+    handleOk(e) {
+      this.visible = false
+
+      let data={
+        id:this.musicItem.id,
+        score: this.score,
+        emotion: this.feeling
+      }
+
+      this.$socket.emit('score',JSON.stringify(data))
+    },
+    //改变心情
+    handleChange(value) {
+      this.feeling=value
+    },
     // 滚动事件
     listScroll(e) {
       const scrollTop = e.target.scrollTop
@@ -291,10 +344,20 @@ export default {
     }
   }
 
-  .list-artist,
-  .list-album {
+  .list-artist {
     display: block;
     width: 300px;
+    .no-wrap();
+    @media (max-width: 1440px) {
+      width: 200px;
+    }
+    @media (max-width: 1200px) {
+      width: 150px;
+    }
+  }
+  .list-album {
+    display: block;
+    width: 10%;
     .no-wrap();
     @media (max-width: 1440px) {
       width: 200px;
