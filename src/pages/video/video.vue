@@ -5,6 +5,7 @@
         <div style="height:500px;width:750px; position: relative;background:#000;margin:0">
           <video ref="myVideo" style="width:100%">
           </video>
+          <canvas ref="myCanvas" style="display:none"></canvas>
           <v-barrage :arr="barrageArray" :is-pause="isPause" :percent="100" />
         </div>
       </v-col>
@@ -52,9 +53,9 @@
       barrageStart: '检测到trigger,识别开始', //开始时的弹幕
       barrageEnd: '检测到trigger，识别结束', //结束的弹幕
       cloudList: [],
-      visible: false,   //对话框是否可见
-      value: 3,   //评分
-      desc: ['很差', '差', '一般', '不错', '很棒'],  //描述
+      visible: false, //对话框是否可见
+      value: 3, //评分
+      desc: ['很差', '差', '一般', '不错', '很棒'], //描述
     }),
     mounted() {
       this.cloudList = getCloudSongs(); //初始化云端歌曲列表
@@ -138,6 +139,9 @@
             myVideo.play()
             this.isPlay = true
             this.btnText = '停止识别'
+
+            //开始识别,每隔1秒上传图像给后端
+            setInterval(()=>{this.uploadPicture()},1000)
           }
         }
       },
@@ -149,6 +153,20 @@
           content: barrageText
         })
       },
+      //发送图像给后端
+      uploadPicture() {
+        let video = this.$refs.myVideo
+        let canvas = this.$refs.myCanvas
+        let context = canvas.getContext('2d')
+        canvas.width = 300;
+        canvas.height = 300;
+        context.drawImage(video, 0, 0, 300, 300);
+        var imgData = canvas.toDataURL();
+
+        this.$socket.emit("picture",imgData)
+        console.log(imgData)
+      },
+
       ...mapMutations({
         setPlaying: 'SET_PLAYING'
       }),
