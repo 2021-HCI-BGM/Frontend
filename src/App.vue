@@ -61,10 +61,10 @@ export default {
     let titleTime
     document.addEventListener('visibilitychange', function() {
       if (document.hidden) {
-        document.title = '死鬼去哪里了！'
+        document.title = 'BGM assistant'
         clearTimeout(titleTime)
       } else {
-        document.title = '(つェ⊂)咦!又好了!'
+        document.title = 'BGM assistant'
         titleTime = setTimeout(function() {
           document.title = OriginTitile
         }, 2000)
