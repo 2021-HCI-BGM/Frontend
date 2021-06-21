@@ -45,7 +45,7 @@
         <slot name="listBtn"></slot>
       </div>
       <a-modal v-model="visible" title="请为本首歌评分" @ok="handleOk">
-        <p>听了此歌您的心情：
+        <p v-if="score<=3">听了此歌您的心情：
            <a-select default-value="happiness" style="width: 120px" @change="handleChange">
             <a-select-option value="happiness">
               开心

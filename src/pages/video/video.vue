@@ -1,9 +1,9 @@
 <template>
-  <v-container id="video-view" fluid tag="section">
+  <v-container  fluid tag="section">
     <v-row justify="center">
       <v-col cols="auto">
         <div style="height:500px;width:750px; position: relative;background:#000;margin:0">
-          <video ref="myVideo" style="width:100%">
+          <video ref="myVideo" id="video-view" style="width:100%">
           </video>
           <canvas ref="myCanvas" style="display:none"></canvas>
           <v-barrage :arr="barrageArray" :is-pause="isPause" :percent="100" />
@@ -185,6 +185,7 @@
 
 <style lang="less">
   #video-view {
+      transform:rotateY(180deg);
     // display: flex;
     // float: left;
     // justify-content: space-around;
